@@ -1,0 +1,84 @@
+% Template:     Informe LaTeX
+% Documento:    Archivo principal
+% Versión:      7.0.3 (02/08/2020)
+% Codificación: UTF-8
+%
+% Autor: Pablo Pizarro R.
+%        Facultad de Ciencias Físicas y Matemáticas
+%        Universidad de Chile
+%        pablo@ppizarror.com
+%
+% Manual template: [https://latex.ppizarror.com/informe]
+% Licencia MIT:    [https://opensource.org/licenses/MIT]
+
+% CREACIÓN DEL DOCUMENTO
+\documentclass[letterpaper,oneside]{article}
+
+% INFORMACIÓN DEL DOCUMENTO
+\def\titulodelinforme {Informe Tarea 1}
+\def\temaatratar {Probabilidad con distribución $\chi^2$}
+
+\def\autordeldocumento {Diego Román Cortés}
+\def\nombredelcurso {Métodos Numéricos para la Ciencia e Ingeniería}
+\def\codigodelcurso {FI3104-1}
+
+\def\nombreuniversidad {Universidad de Chile}
+\def\nombrefacultad {Facultad de Ciencias Físicas y Matemáticas}
+\def\departamentouniversidad {Departamento de Física}
+\def\imagendepartamento {departamentos/dfi}
+\def\imagendepartamentoescala {0.2}
+\def\localizacionuniversidad {Santiago, Chile}
+
+% INTEGRANTES, PROFESORES Y FECHAS
+\def\tablaintegrantes {
+\begin{tabular}{ll}
+	Nombre:
+	& \begin{tabular}[t]{l}
+		Diego Román
+	\end{tabular} \\
+	RUT:
+	& \begin{tabular}[t]{l}
+		20.299.495-4
+	\end{tabular} \\
+	Profesor:
+	& \begin{tabular}[t]{l}
+		Valentino González
+	\end{tabular} \\
+	Auxiliares:
+	& \begin{tabular}[t]{l}
+		Vicente Donaire \\
+		Benjamín Navarrete
+	\end{tabular} \\
+	\multicolumn{2}{l}{Fecha de entrega: 21 de septiembre} \\
+\end{tabular}}{
+}
+
+% IMPORTACIÓN DEL TEMPLATE
+\input{template}
+
+% INICIO DE PÁGINAS
+\begin{document}
+	
+% PORTADA
+\templatePortrait
+
+% CONFIGURACIÓN DE PÁGINA Y ENCABEZADOS
+\templatePagecfg
+
+% TABLA DE CONTENIDOS - ÍNDICE
+%\templateIndex
+
+% CONFIGURACIONES FINALES
+\templateFinalcfg
+
+% ======================= INICIO DEL DOCUMENTO =======================
+El problema a resolver es encontrar numéricamente el valor de $a$ para la siguiente ecuación:
+$$
+0.95 = \int_{-\infty}^a pdf(x) dx 
+$$
+La función $pdf(x)$ es, en este caso, la distribución $\displaystyle \chi^2(x) = \frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2-1}e^{-x/2}$, 
+donde $\displaystyle  \Gamma(z) = \int_0^\infty x^{z-1}e^{-x}dx$.
+
+La implementación de la función $\Gamma(z)$ en el código posee el problema del límite de integración superior infinito. Para solucionarlo, se debe realizar un cambio de variables apropiado.
+% FIN DEL DOCUMENTO
+\end{document}
