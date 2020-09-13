@@ -79,9 +79,9 @@ $$
 La función $pdf(x)$ es, en este caso, la distribución $\displaystyle \chi^2(x) = \frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2-1}e^{-x/2}$, 
 donde $\displaystyle  \Gamma(z) = \int_0^\infty x^{z-1}e^{-x}dx$.
 
-La implementación de la función $\Gamma(z)$ en el código posee el problema del límite de integración superior infinito. Para solucionarlo, se debe realizar un cambio de variables apropiado. Tomando $u = e^{-x}$ ($du = -e^{-x}dx$) la integral queda:
+La implementación de la función $\Gamma(z)$ en el código posee el problema del límite de integración superior infinito. Para solucionarlo, se debe realizar un cambio de variables apropiado. Tomando $x = \tan(u)$ ($dx = \sec[2](u)du = (\tan[2](u)+ 1) du$) la integral queda:
 $$
-	\int_0^\infty x^{z-1}e^{-x}dx = \int_0^1 (-\ln(u))^{z-1} du
+	\int_0^\infty x^{z-1}e^{-x}dx = \int_0^\frac{\pi}{2} (\tan(u))^{z-1}(\tan[2](u)+1)e^{-\tan(u)} du
 $$
 % FIN DEL DOCUMENTO
 \end{document}
