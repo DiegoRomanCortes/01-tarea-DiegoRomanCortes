@@ -49,7 +49,7 @@
 		Vicente Donaire \\
 		Benjamín Navarrete
 	\end{tabular} \\
-	\multicolumn{2}{l}{Fecha de entrega: 21 de septiembre} \\
+	\multicolumn{2}{l}{Fecha de entrega: 26 de septiembre} \\
 \end{tabular}}{
 }
 
@@ -74,14 +74,17 @@
 % ======================= INICIO DEL DOCUMENTO =======================
 El problema a resolver es encontrar numéricamente el valor de $a$ para la siguiente ecuación:
 $$
-0.95 = \int_{-\infty}^a pdf(x) dx 
+0.95 = \P(x<a) =\int_{-\infty}^a pdf(x) dx 
 $$
 La función $pdf(x)$ es, en este caso, la distribución $\displaystyle \chi^2(x) = \frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2-1}e^{-x/2}$, 
 donde $\displaystyle  \Gamma(z) = \int_0^\infty x^{z-1}e^{-x}dx$.
 
-La implementación de la función $\Gamma(z)$ en el código posee el problema del límite de integración superior infinito. Para solucionarlo, se debe realizar un cambio de variables apropiado. Tomando $x = \tan(u)$ ($dx = \sec[2](u)du = (\tan[2](u)+ 1) du$) la integral queda:
+La implementación de la función $\Gamma(z)$ en el código posee el problema del límite de integración superior infinito. Para solucionarlo, se debe realizar un cambio de variables apropiado. Tomando $u = e^{-x}$ ($du = -e^{-x}dx$) la integral queda:
 $$
-	\int_0^\infty x^{z-1}e^{-x}dx = \int_0^\frac{\pi}{2} (\tan(u))^{z-1}(\tan[2](u)+1)e^{-\tan(u)} du
+	\int_0^\infty x^{z-1}e^{-x}dx = \int_1^0 -(-\ln(u))^{z-1} du = \int_0^1 \left(\ln(\frac{1}{u})\right)^{z-1}du
 $$
+La integración numérica de $\Gamma(z)$ requirió del uso del método del punto medio para el caso de la singularidad en $z = 0$, mientras que desde un $\Delta x = 1\cross10^{-7}$ hasta $z=1$ se usó Simpson 1/3.
+
+
 % FIN DEL DOCUMENTO
 \end{document}
