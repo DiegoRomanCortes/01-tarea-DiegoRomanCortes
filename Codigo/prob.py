@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def pto_medio(func, z, a, b):
     dx = b-a
@@ -24,6 +25,7 @@ def simpson(func, z, a, b, N = 100, rel_tol = 1e-6):
     simp = (4*sum2 - sum)/3
     dif = np.abs((simp - sum)/sum)
     if dif < rel_tol:
+        #print(N) #debugging
         return sum
     else:
         return simpson(func, z, a, b, 2*N, rel_tol)
@@ -32,12 +34,12 @@ def Gamma_du(z, u): #integando de la funcion gamma con u=e^(-x)
     gdu = np.log(1/u)**(z-1)
     return gdu
 
-def Gamma(z, dx = 1e-7):
+def Gamma(z, dx = 1e-6):
     #nuevos extremos gracias al C.V.
     a = 0
     b = 1
-    g = simpson(Gamma_du, z, a + dx, b)
-    g += pto_medio(Gamma_du, z, a, a + dx) 
+    g = simpson(Gamma_du, z, a + dx, b, rel_tol=dx)
+    g += pto_medio(Gamma_du, z, a, a + dx)
     return g
 
 K = 4.495 #rut 20299495-4
@@ -78,9 +80,63 @@ def prob_menos_95(k, a):
     res = prob_chi2(k, a) - 0.95 #se quiere encontrar res = 0
     return res
 
-#print(Gamma(2))
-#print(Gamma(3)) #Gamma(n) = (n-1)!
-                #como k/2 es cercano a 2 se han ajustado los paramentros para que gamma(2) aprox 1
+#codigo para graficar distintas tolerancias relativas y determinar el valor a utilizar
+ 
+""" tolerancias_de_prueba = np.logspace(-6, -1)
+error = np.zeros(len(tolerancias_de_prueba))
 
-a = biseccion(prob_menos_95, K, 5, 15) #a debiera ser cercano a 10.28
-print("El valor de a es:", a)
+plt.clf()
+
+counter = 0
+for tol in tolerancias_de_prueba:
+    dif1 = np.abs(Gamma(1, dx = tol) - 1) #Gamma(1) = 1
+    dif2 = np.abs(Gamma(2, dx = tol) - 1) #Gamma(2) = 1
+    dif3 = np.abs(Gamma(3, dx = tol) - 2) #Gamma(3) = 2
+    dif4 = np.abs(Gamma(4, dx = tol) - 6) #Gamma(4) = 6
+    error[counter] = np.mean(np.array([dif1, dif2, dif3, dif4]))
+    counter += 1
+plt.plot(tolerancias_de_prueba, error)
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('tolerancia relativa para Simpson')
+plt.ylabel('promedio de errores absolutos cometido')
+plt.show() """ 
+
+""" tolerancias_de_prueba_2 = np.logspace(-12, -6)
+error_2 = np.zeros(len(tolerancias_de_prueba_2))
+
+plt.clf()
+
+counter = 0
+for tol_2 in tolerancias_de_prueba_2:
+    a = biseccion(prob_menos_95, K, 5, 15, tol=tol_2)
+    dif = np.abs(prob_menos_95(K, a))
+    error_2[counter] = dif
+    counter += 1
+
+plt.plot(tolerancias_de_prueba_2, error_2)
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('tolerancia absoluta para bisección')
+plt.ylabel('error absoluto cometido')
+plt.show() """
+
+a = biseccion(prob_menos_95, K, 5, 15, tol=1e-12) #a debiera ser cercano a 10.28
+
+#finalmente se graficará la forma de la función chi2, así como el valor a obtenido
+
+x = np.linspace(0, 1.1*a)
+y = chi2(K ,x)
+
+x1 = np.linspace(0, a)
+y1 = chi2(K, x1)
+
+plt.clf()
+plt.title(r'$\chi ^2 (x)$ para $k=4.495$')
+plt.xlabel('x')
+plt.ylabel(r'y = $\chi ^2 (x)$')
+plt.axvline(a, label = 'a = {}'.format(a), color = 'r')
+plt.fill_between(x1, 0, y1, label = r'$P(x < a) = \int_0^a \chi^2 (x) dx$')
+plt.plot(x, y, label=r'$\chi^2(x)$')
+plt.legend()
+plt.show()

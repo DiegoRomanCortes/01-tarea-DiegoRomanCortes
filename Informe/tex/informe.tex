@@ -83,8 +83,18 @@ La implementación de la función $\Gamma(z)$ en el código posee el problema de
 $$
 	\int_0^\infty x^{z-1}e^{-x}dx = \int_1^0 -(-\ln(u))^{z-1} du = \int_0^1 \left(\ln(\frac{1}{u})\right)^{z-1}du
 $$
-La integración numérica de $\Gamma(z)$ requirió del uso del método del punto medio para el caso de la singularidad en $z = 0$, mientras que desde un $\Delta x = 1\cross10^{-7}$ hasta $z=1$ se usó Simpson 1/3.
+La integración numérica de $\Gamma(z)$ requirió del uso del método del punto medio para el caso de la singularidad en $z = 0$, mientras que desde un $\Delta x = 1\cross10^{-6}$ hasta $z=1$ se usó Simpson 1/3.
+
+Se determinó el valor a usar de la tolerancia relativa gracias a la figura \ref{err}. Se aprecia una línea casi recta para un espacio logarítmico (log-log). El promedio se calculó tomando la media aritmética del valor absoluto de la diferencia entre el valor real de $\Gamma(z)$ y la aproximación numérica para $z \in \{1, 2, 3, 4\}$.
+
+\insertimage{tol_rel_3_Gamma.png}{width = 10cm}{Error absoluto promedio en función de la tolerancia relativa otorgada como parámetro al método de Simpson. \label{err}}
+
+La función $\chi ^2 (x)$ tiene su dominio en $\R^+ \cup \{0\}$, por lo que para el cálculo de $\P(x<a)$ no se requirió un cambio de variables que solucionara el problema del extremo inferior $x=-\infty$ (se calcula desde $x=0$).
 
 
+Finalmente para encontrar el valor de $a$ se ha usado el método de la bisección otorgándole un parámetro de tolerancia absoluta de $1\cross 10^{-12}$. Este último se obtuvo gracia a la figura \ref{abs}, que indica una mejora de precisión a menor valor de tolerancia.
+\insertimage{tol_abs.png}{width=10cm}{Error absoluto para distintas tolerancias absolutas. \label{abs}}
+Visualmente, la resolución del problema consistía en encontrar el $a$ que hiciera el área azul bajo la curva $y = \chi^2(x)$ igual a 0.95, cuestión ilustrada en la figura \ref{area} 
+\insertimage{area_bajo_chi2_para_a.png}{width=10cm}{Área bajo la curva $y = \chi^2(x)$ desde $x = 0$ hasta el valor encontrado $x=a$. \label{area}}
 % FIN DEL DOCUMENTO
 \end{document}
