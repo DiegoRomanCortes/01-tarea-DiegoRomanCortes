@@ -20,17 +20,18 @@ def trapecio(func, z, a, b, N = 100):
 
 
 def simpson(func, z, a, b, N = 100, rel_tol = 1e-6):
-    sum = trapecio(func, z, a, b, N)    
-    sum2 = trapecio(func, z, a, b, 2*N)
-    simp = (4*sum2 - sum)/3
-    dif = np.abs((simp - sum)/sum)
-    if dif < rel_tol:
-        #print(N) #debugging
-        return sum
-    else:
-        return simpson(func, z, a, b, 2*N, rel_tol)
+    dif = np.infty #primera vez siempre entra al bucle
+    
+    while dif > rel_tol:
+        N *= 2
+        sum = trapecio(func, z, a, b, N)    
+        sum2 = trapecio(func, z, a, b, 2*N)
+        simp = (4*sum2 - sum)/3
+        dif = np.abs((simp - sum)/sum)
+    #se sale del ciclo porque dif < rel_tol
+    return simp
 
-def Gamma_du(z, u): #integando de la funcion gamma con u=e^(-x)
+def Gamma_du(z, u): #integrando de la funcion gamma con u=e^(-x)
     gdu = np.log(1/u)**(z-1)
     return gdu
 
@@ -56,7 +57,7 @@ def prob_chi2(k, a):
 
 #el problema prob_chi2(a) = 0.95 se puede reescribir como el problema del cero de una funcion
 # definiendo g(a) = prob_chi2(a) - 0.95 = 0
-def biseccion(func, k, a, b, tol=1e-6, lim=1000):
+def biseccion(func, k, a, b, tol=1e-6, lim=1e6): #lim permite evitar que el programa colapse 
     counter = 0
     dif = np.abs(func(k, b)-func(k, a))
     while  dif > tol:
@@ -80,8 +81,49 @@ def prob_menos_95(k, a):
     res = prob_chi2(k, a) - 0.95 #se quiere encontrar res = 0
     return res
 
-#codigo para graficar distintas tolerancias relativas y determinar el valor a utilizar
- 
+#codigo para graficar el integrando original de Gamma
+""" x = np.linspace(0, 10, num=500)
+y = np.zeros(len(x))
+counter = 0
+for xi in x:
+    y[counter] = xi**(K/2-1)*np.exp(-xi)
+    counter += 1
+plt.figure(1)
+plt.clf()
+plt.plot(x, y)
+plt.fill_between(x, y)
+plt.xlabel('x')
+plt.ylabel('$y = x^{k/2 - 1}e^{-x}$', fontsize='x-large')
+plt.show() """
+
+#codigo para graficar el integrando modificado de Gamma
+""" x = np.linspace(0, 1)
+y = np.zeros(len(x))
+counter = 0
+for xi in x:
+    y[counter] = Gamma_du(K/2, xi)
+    counter += 1
+plt.figure(2)
+plt.clf()
+plt.plot(x, y)
+plt.xlabel('x')
+plt.ylabel(r'$y = (-\ln (x))^{K/2 - 1}$', fontsize='x-large')
+plt.fill_between(x, y)
+plt.show() """
+
+#codigo para graficar Gamma
+""" x = np.linspace(1, 3)
+y = np.zeros(len(x))
+counter = 0
+for xi in x:
+    y[counter] = Gamma(xi, dx = 1e-3)
+    counter += 1
+plt.clf()
+plt.plot(x, y)
+plt.show()
+ """
+
+#codigo para graficar distintas tolerancias relativas y determinar el valor a utilizar 
 """ tolerancias_de_prueba = np.logspace(-6, -1)
 error = np.zeros(len(tolerancias_de_prueba))
 
@@ -100,7 +142,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('tolerancia relativa para Simpson')
 plt.ylabel('promedio de errores absolutos cometido')
-plt.show() """ 
+plt.show() """
 
 """ tolerancias_de_prueba_2 = np.logspace(-12, -6)
 error_2 = np.zeros(len(tolerancias_de_prueba_2))
@@ -121,11 +163,10 @@ plt.xlabel('tolerancia absoluta para bisección')
 plt.ylabel('error absoluto cometido')
 plt.show() """
 
-a = biseccion(prob_menos_95, K, 5, 15, tol=1e-12) #a debiera ser cercano a 10.28
+#a = biseccion(prob_menos_95, K, 5, 15, tol=1e-12) #a debiera ser cercano a 10.28
 
 #finalmente se graficará la forma de la función chi2, así como el valor a obtenido
-
-x = np.linspace(0, 1.1*a)
+""" x = np.linspace(0, 1.1*a)
 y = chi2(K ,x)
 
 x1 = np.linspace(0, a)
@@ -139,4 +180,4 @@ plt.axvline(a, label = 'a = {}'.format(a), color = 'r')
 plt.fill_between(x1, 0, y1, label = r'$P(x < a) = \int_0^a \chi^2 (x) dx$')
 plt.plot(x, y, label=r'$\chi^2(x)$')
 plt.legend()
-plt.show()
+plt.show() """
