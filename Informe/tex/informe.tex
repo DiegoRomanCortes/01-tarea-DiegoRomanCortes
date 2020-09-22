@@ -40,6 +40,10 @@
 	& \begin{tabular}[t]{l}
 		20.299.495-4
 	\end{tabular} \\
+		Github:
+	& \begin{tabular}[t]{l}
+		\href{https://github.com/DiegoRomanCortes}{@DiegoRomanCortes}
+	\end{tabular} \\
 	Profesor:
 	& \begin{tabular}[t]{l}
 		Valentino González
@@ -82,10 +86,10 @@ y $\displaystyle  \Gamma(z) = \int_0^\infty x^{z-1}e^{-x}dx$.
 \newp
 Se comenzará con la implementación de la función $\Gamma(z)$. Para su implementación en código se regularizará la integral por medio de un cambio de variable apropiado. La integración se hará usando el método de Simpson, teniendo como parámetro la convergencia relativa deseada. Debido a la singularidad, la integración irá acompañada por el método del punto medio para obtener una aproximación de la integral en valores cercanos a $x=0$.
 
-Luego, usando el mismo método de Simpson se calcularán valores de $\P(x < a)$ para $5<a<15$, que irán acercándose a $\P(x<a)=0.95$ con la tolerancia absoluta que se requiera gracias al método de la bisección.
+Luego, usando el mismo método de Simpson se calcularán valores de $\P(x < a)$ para $0.1<a<20$, que irán acercándose a $\P(x<a)=0.95$ con la tolerancia absoluta que se requiera gracias al método de la bisección.
 
 \section{Desarrollo}
-
+El integrando original describe un área que se puede apreciar en la figura \ref{original}
 Tomando $u = e^{-x}$ la integral queda:
 $$	
 	\Gamma(z)
@@ -94,34 +98,47 @@ $$
 	=
 	\int_0^1 \left(\ln(\frac{1}{u})\right)^{z-1}du
 $$
-La integración numérica de $\Gamma(z)$ requirió del uso del método del punto medio para el caso de la singularidad en $z = 0$, donde se calculó la integral entre 0 y un $\Delta x = 1\cross10^{-6}$ como $I_0 = f(\frac{\Delta x}{2})\Delta x$. 
+
+La integración numérica de $\Gamma(z)$ requirió del uso del método del punto medio para el caso de la singularidad en $z = 0$ que se puede apreciar en la figura \ref{modificado}, donde se calculó la integral entre 0 y un $\Delta x > 0$ (que se presentará más adelante) como $I_0 = f(\frac{\Delta x}{2})\Delta x$. 
 
 Desde $z=\Delta x$ hasta $z=1$ se usó Simpson vía método de los trapecios. 
 Se calculó $S_{2N}=\frac{1}{3}(4T_{2N}-T_N)$, donde $S_{2N}$ es la integral usando Simpson, mientras que $T_N$, $T_{2N}$ son las integrales usando trapecios. 
 
-Las integrales $T_N$ se calculan como $\displaystyle T_N=\left(\frac{f(x_0)+f(x_N)}{2}+\sum_{i=1}^{N-1} f(x_i)\right)\Delta x$.
 
-Se ha definido un parámetro llamado tol\_rel que permite determinar el cumplimiento de la siguiente desigualdad:
+Las integrales usando método de trapecios se calculan como $\displaystyle T_N=\left(\frac{f(a)+f(b)}{2}+\sum_{i=1}^{N-1} f(x_0+i\Delta x)\right)\Delta x$, con $\displaystyle \Delta x = \frac{b-a}{N}$.
 
-\insertequation{\left|\frac{S_{2N}-T_N}{T_N}\right|> tol\_rel} 
+Se ha definido un parámetro llamado \textbf{tol\_rel} que permite determinar el cumplimiento de la siguiente desigualdad:
+
+\insertequation{\left|\frac{S_{2N}-T_N}{T_N}\right|> \textbf{tol\_rel}} 
 
 En caso contrario, no será necesario volver a llamar recursivamente la función considerando el doble de puntos.
-Se determinó el valor a usar de la tolerancia relativa gracias a la figura \ref{err}. Se usaron valores conocidos de $\Gamma(z)$ (si $n \in \N$, $\Gamma(z)=(z-1)!$) 
+Se determinó el valor a usar de la tolerancia relativa gracias a la figura \ref{err}. Se usaron valores conocidos de $\Gamma(z)$ (si $n \in \N$, $\Gamma(n)=(n-1)!$) cercanos a $k/2$, para posteriormente calcular el error asociado a la tolerancia otorgada y luego promediarlo para distintos valores.
+
+\begin{images}[\label{integrando}]{Área bajo los integrandos.}
+	\addimage{area_bajo_gamma_1.png}{width=8cm}{Área bajo la curva $y=x^{k/2-1}e^{-x}$ entre $x=0$ y $x=\infty$, cuyo valor es equivalente a calcular $\Gamma(k/2)$, con $k=4.495$. \label{original}}
+	\addimage{area_bajo_gamma_2.png}{width=8cm}{Área bajo la curva $y=(-\ln(u))^{k/2-1}$ entre $x=0$ y $x=1$, cuyo valor es equivalente a calcular $\Gamma(k/2)$, con $k=4.495$. \label{modificado}}	
+\end{images}
 
 
-Se aprecia una línea casi recta para un espacio logarítmico (log-log). El promedio se calculó tomando la media aritmética del valor absoluto de la diferencia entre el valor real de $\Gamma(z)$ y la aproximación numérica para $z \in \{1, 2, 3, 4\}$.
+El error cuadrático medio se calculó como \insertequation{\langle e \rangle_{2N} = \frac{1}{4}\sum_{i=1}^4 |S_{2N}(i) - (i-1)!|} y se aprecia su valor para distintas tolerancias relativas en la figura \ref{err}.
 
-\insertimage{tol_rel_3_Gamma.png}{width = 10cm}{Error absoluto promedio en función de la tolerancia relativa otorgada como parámetro al método de Simpson. \label{err}}
-
+\newp
 La función $\chi ^2 (x)$ tiene su dominio en $\R^+ \cup \{0\}$, por lo que para el cálculo de $\P(x<a)$ no se requirió un cambio de variables que solucionara el problema del extremo inferior $x=-\infty$ (se calcula desde $x=0$).
 
 
-Finalmente para encontrar el valor de $a$ se ha usado el método de la bisección otorgándole un parámetro de tolerancia absoluta de $1\cross 10^{-12}$. Este último se obtuvo gracia a la figura \ref{abs}, que indica una mejora de precisión a menor valor de tolerancia.
-\insertimage{tol_abs.png}{width=10cm}{Error absoluto para distintas tolerancias absolutas. \label{abs}}
-Visualmente, la resolución del problema consistía en encontrar el $a$ que hiciera el área azul bajo la curva $y = \chi^2(x)$ igual a 0.95, cuestión ilustrada en la figura \ref{area} 
-\insertimage{area_bajo_chi2_para_a.png}{width=10cm}{Área bajo la curva $y = \chi^2(x)$ desde $x = 0$ hasta el valor encontrado $x=a$. \label{area}}
+Finalmente para encontrar el valor de $a$ se ha usado el método de la bisección. Se definió en el código la función \textbf{prob\_menos\_95} para que el problema final sea calcular el cero de la función $f(a) = \int_0^a \chi^2(x) dx - 0.95$. 
+
+El método de la bisección toma dos puntos $x_1$ y $x_2$ tales que $f(x_1)f(x_2)<0$. Se escoge $p=\frac{x_1 + x_2}{2}$ para luego determinar a qué lado del cero está $f(p)$. Este proceso se itera tantas veces como precisión se quiera. El error asociado se grafica en la figura \ref{errabs}.
+\insertimage{area_bajo_chi2_para_a.png}{width=8cm}{Área bajo la curva $y = \chi^2(x)$ desde $x = 0$ hasta el valor encontrado $x=a$. \label{area}}
+Se usó también el método de Newton-Rhapson, consistente en iterar $x_{i+1}=x_i-\frac{f(x_i)}{f'(x_i)}$. La derivada de $f(x)$ es $f'(x) = \chi^2(x)$ por teorema fundamental del cálculo.
 \section{Resultados}
+\insertimage{tol_rel_3_Gamma.png}{width = 10cm}{Error absoluto promedio en función de la tolerancia relativa otorgada como parámetro al método de Simpson para la función $\Gamma(z)$. \label{err}}
+\insertimage{tol_abs.png}{width = 10cm}{Error absoluto en función de la tolerancia absoluta otorgada como parámetro al método de la bisección para $f(a)=\int_0^a \chi^2(x)dx - 0.95$. \label{errabs}}
+
+\insertimage{biseccion.png}{width=10cm}{Valor de $a$ encontrado con el método de la bisección.}
 
 \section{Discusión y Conclusiones}
+Visualmente, la resolución del problema consistía en encontrar el $a$ que hiciera el área azul bajo la curva $y = \chi^2(x)$ igual a 0.95, cuestión ilustrada en la figura \ref{area}.
+
 % FIN DEL DOCUMENTO
 \end{document}
