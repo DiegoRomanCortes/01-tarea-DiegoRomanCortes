@@ -86,7 +86,7 @@ y $\displaystyle  \Gamma(z) = \int_0^\infty x^{z-1}e^{-x}dx$.
 \newp
 Se comenzará con la implementación de la función $\Gamma(z)$. Para su implementación en código se regularizará la integral por medio de un cambio de variable apropiado. La integración se hará usando el método de Simpson, teniendo como parámetro la convergencia relativa deseada. Debido a la singularidad, la integración irá acompañada por el método del punto medio para obtener una aproximación de la integral en valores cercanos a $x=0$.
 
-Luego, usando el mismo método de Simpson se calcularán valores de $\P(x < a)$ para $0.1<a<20$, que irán acercándose a $\P(x<a)=0.95$ con la tolerancia absoluta que se requiera gracias al método de la bisección.
+Luego, usando el mismo método de Simpson se calcularán valores de $\P(x < a)$ para $0.1<a<20$, que irán acercándose a $\P(x<a)=0.95$ con la tolerancia absoluta que se requiera gracias al método de Newton, otorgándole un valor inicial dado por el método de la bisección.
 
 \section{Desarrollo}
 El integrando original describe un área que se puede apreciar en la figura \ref{original}
@@ -128,14 +128,13 @@ La función $\chi ^2 (x)$ tiene su dominio en $\R^+ \cup \{0\}$, por lo que para
 
 Finalmente para encontrar el valor de $a$ se ha usado el método de la bisección. Se definió en el código la función \textbf{prob\_menos\_95} para que el problema final sea calcular el cero de la función $f(a) = \int_0^a \chi^2(x) dx - 0.95$. 
 
-El método de la bisección toma dos puntos $x_1$ y $x_2$ tales que $f(x_1)f(x_2)<0$. Se escoge $p=\frac{x_1 + x_2}{2}$ para luego determinar a qué lado del cero está $f(p)$. Este proceso se itera tantas veces como precisión se quiera. El error asociado se grafica en la figura \ref{errabs}.
+El método de la bisección toma dos puntos $x_1$ y $x_2$ tales que $f(x_1)f(x_2)<0$. Se escoge $p=\frac{x_1 + x_2}{2}$ para luego determinar a qué lado del cero está $f(p)$. Este proceso se itera tantas veces como precisión se quiera. 
 \insertimage{area_bajo_chi2_para_a.png}{width=8cm}{Área bajo la curva $y = \chi^2(x)$ desde $x = 0$ hasta el valor encontrado $x=a$. \label{area}}
-Se usó también el método de Newton-Rhapson, consistente en iterar $x_{i+1}=x_i-\frac{f(x_i)}{f'(x_i)}$. La derivada de $f(x)$ es $f'(x) = \chi^2(x)$ por teorema fundamental del cálculo.
+Se usó también el método de Newton-Rhapson como comparación, consistente en iterar $x_{i+1}=x_i-\frac{f(x_i)}{f'(x_i)}$. La derivada de $f(x)$ es $f'(x) = \chi^2(x)$ por teorema fundamental del cálculo.
 \section{Resultados}
 \insertimage{tol_rel_3_Gamma.png}{width = 10cm}{Error absoluto promedio en función de la tolerancia relativa otorgada como parámetro al método de Simpson para la función $\Gamma(z)$. \label{err}}
-\insertimage{tol_abs.png}{width = 10cm}{Error absoluto en función de la tolerancia absoluta otorgada como parámetro al método de la bisección para $f(a)=\int_0^a \chi^2(x)dx - 0.95$. \label{errabs}}
 
-\insertimage{biseccion.png}{width=10cm}{Valor de $a$ encontrado con el método de la bisección.}
+\insertimage{biseccion.png}{width=10cm}{Valor de $a$ encontrado con el método de Newton.}
 
 \section{Discusión y Conclusiones}
 Visualmente, la resolución del problema consistía en encontrar el $a$ que hiciera el área azul bajo la curva $y = \chi^2(x)$ igual a 0.95, cuestión ilustrada en la figura \ref{area}.

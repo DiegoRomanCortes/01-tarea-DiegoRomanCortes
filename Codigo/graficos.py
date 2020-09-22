@@ -52,7 +52,7 @@ plt.show()
 #graficos de tolerancias comentados porque demoran mucho
 
 #codigo para graficar distintas tolerancias relativas y determinar el valor a utilizar 
-tolerancias_de_prueba = np.logspace(-6, -1)
+""" tolerancias_de_prueba = np.logspace(-6, -1)
 error = np.zeros(len(tolerancias_de_prueba))
 
 plt.clf()
@@ -74,7 +74,7 @@ plt.ylabel('Promedio de errores absolutos cometido', fontsize=13)
 plt.xticks(fontsize=10)
 plt.yticks(fontsize=10)
 plt.show()
-
+ """
 tolerancias_de_prueba_2 = np.logspace(-12, -2)
 error_2 = np.zeros(len(tolerancias_de_prueba_2))
 

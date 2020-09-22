@@ -41,7 +41,7 @@ def Gamma(z, dx = 1e-6):
     return g
 
 K = 4.495 #rut 20299495-4
-GAMMA_K_MEDIOS = Gamma(K/2, dx=1e-8)
+GAMMA_K_MEDIOS = Gamma(K/2, dx=1e-6)
 
 def chi2(k, x):
     res = 1/(np.exp2(k/2)*GAMMA_K_MEDIOS)*x**(k/2 - 1)*np.exp(-x/2) #definicion de chi^2(x)
@@ -58,7 +58,7 @@ def biseccion(func, k, a, b, tol_abs=1e-6, lim=1e6): #lim permite evitar que el 
     counter = 0
     dif = np.abs(func(k, b)-func(k, a))
     while  dif > tol_abs:
-        dif = np.abs(func(k, b)-func(k, a))
+        dif = np.abs(b-a)
         p = (a+b)/2
         if counter > lim: 
             print('limite de iteraciones excedido')
@@ -85,7 +85,7 @@ def newton(func, derivada, k, x_0, tol_abs = 1e-6):
     dif = np.infty
     while dif > tol_abs:
         x_1 = x_0 - func(k, x_0)/derivada(k, x_0)
-        dif = np.abs(func(k, x_1)-func(k, x_0))
+        dif = np.abs(x_1-x_0)
         x_0 = x_1
     return x_1
 
