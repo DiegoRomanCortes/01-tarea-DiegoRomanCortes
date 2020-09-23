@@ -72,9 +72,10 @@ def biseccion(func, k, a, b, tol_abs=1e-6, lim=1e6): #lim permite evitar que el 
         elif prod < 0:
             b = p
         counter += 1
+    print('Número de pasos con bisección:', counter)
     return p
 
-def prob_menos_95(k, a, rel_tol=1e-8):
+def prob_menos_95(k, a, rel_tol=1e-10):
     res = prob_chi2(k, a, rel_tol=rel_tol) - 0.95 #se quiere encontrar res = 0
     return res
 
@@ -83,10 +84,13 @@ def newton(func, derivada, k, x_0, tol_abs = 1e-6):
     #f'(x) = chi^2(x)
     #x_{i+1} = x_i - f(x_i)/f'(x_i)
     dif = np.infty
+    N = 0
     while dif > tol_abs:
         x_1 = x_0 - func(k, x_0)/derivada(k, x_0)
         dif = np.abs(x_1-x_0)
         x_0 = x_1
+        N+=1
+    print('Número de pasos con Newton:', N)
     return x_1
 
 tol = 1e-5
